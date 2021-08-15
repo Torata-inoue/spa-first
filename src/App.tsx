@@ -1,10 +1,10 @@
 import React from 'react'
-import Task from './ducks/task/Task'
+import Comment from "./features/comment/Comment";
 
 const App: React.FC = () => {
   return (
     <>
-      <Task />
+      <Comment />
     </>
   )
 }
