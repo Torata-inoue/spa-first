@@ -7,7 +7,7 @@ export interface CommentState {
   body: string,
 }
 
-const apiUrl: string = 'http://localhost:3000/comments';
+const apiUrl: string = 'http://localhost:3001/comments';
 
 export const fetchAsyncGet = createAsyncThunk("comments/get", async () => {
   const res = await axios.get(apiUrl, {
@@ -18,11 +18,28 @@ export const fetchAsyncGet = createAsyncThunk("comments/get", async () => {
   return res.data;
 });
 
-const initialState: CommentState[] = [];
+export const fetchAsyncCreate = createAsyncThunk("comments/post", async (comment: string) => {
+  const res = await axios.post(apiUrl, {user_id: 1, body: comment}, {
+    headers: {
+      "Content-Type": "application/json",
+    }
+  })
+  return res.data;
+})
+
+const comments: CommentState[] = [
+  {
+    id: 0,
+    user_id: 0,
+    body: ''
+  }
+];
 
 export const commentSlice = createSlice({
   name: 'comment',
-  initialState,
+  initialState: {
+    comments
+  },
   reducers: {},
   extraReducers: builder => {
     builder.addCase(fetchAsyncGet.fulfilled, (state, action) => {
@@ -31,12 +48,17 @@ export const commentSlice = createSlice({
         comments: action.payload
       };
     });
+    builder.addCase(fetchAsyncCreate.fulfilled, (state, action) => {
+      return {
+        ...state,
+        comments: [action.payload, ...state.comments]
+      };
+    });
   }
 })
 
 // export const selectComments = (state: any) => state.comment.comments;
 export const selectComments = (state: any) => {
-  console.log(state);
   return state.comment.comments;
 };
 
