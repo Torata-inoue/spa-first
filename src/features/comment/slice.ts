@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-export interface CommentState {
-  id: number,
-  user_id: number,
-  body: string,
-}
+// export interface CommentState {
+//   id: number,
+//   user_id: number,
+//   body: string,
+// }
 
 const apiUrl: string = 'http://localhost:3001/comments';
 
@@ -27,11 +27,13 @@ export const fetchAsyncCreate = createAsyncThunk("comments/post", async (comment
   return res.data;
 })
 
-const comments: CommentState[] = [
+const comments = [
   {
     id: 0,
     user_id: 0,
-    body: ''
+    body: '',
+    user: {},
+    nominees: []
   }
 ];
 

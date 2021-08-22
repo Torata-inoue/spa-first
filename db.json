@@ -39,5 +39,26 @@
       "id": 3,
       "comment_id": 3
     }
+  ],
+  "pointHistories": [],
+  "prizes": [],
+  "prizeExchangeHistories": [],
+  "reactions": [],
+  "users": [
+    {
+      "id": 1,
+      "name": "Taro",
+      "stamina": 10
+    },
+    {
+      "id": 2,
+      "name": "Kotaro",
+      "stamina": 10
+    },
+    {
+      "id": 3,
+      "name": "Otaro",
+      "stamina": 10
+    }
   ]
 }

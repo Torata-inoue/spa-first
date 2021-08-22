@@ -1,10 +1,10 @@
 import React from 'react'
-import Comment from "./features/comment/Comment";
+import Timeline from "./components/timeline";
 
 const App: React.FC = () => {
   return (
     <>
-      <Comment />
+      <Timeline />
     </>
   )
 }
