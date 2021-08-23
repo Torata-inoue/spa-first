@@ -7,7 +7,7 @@ import axios from "axios";
 //   body: string,
 // }
 
-const apiUrl: string = 'http://localhost:3001/comments';
+const apiUrl: string = 'http://127.0.0.1:8080/api/v1/comment';
 
 export const fetchAsyncGet = createAsyncThunk("comments/get", async () => {
   const res = await axios.get(apiUrl, {
@@ -15,6 +15,7 @@ export const fetchAsyncGet = createAsyncThunk("comments/get", async () => {
       "Content-Type": "application/json",
     }
   });
+  console.log(res);
   return res.data;
 });
 
