@@ -1,10 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
-const apiUrl: string = 'http://localhost:3001/reactions';
+import {apiUrl} from "../../config/api/url";
 
 export const fetchAsyncGet = createAsyncThunk('reactions/get', async () => {
-  const res = await axios.get(apiUrl, {
+  const res = await axios.get(`${apiUrl}/reaction`, {
     headers: {
       "Content-Type": "application/json",
     }
@@ -14,10 +13,10 @@ export const fetchAsyncGet = createAsyncThunk('reactions/get', async () => {
 
 export const fetchAsyncCreate = createAsyncThunk('reactions/create', async (params: any) => {
   const data = {
-    user_id: params.user_id,
+    comment_id: params.comment_id,
     target_id: params.target_id,
   };
-  const res = await axios.post(apiUrl, data, {
+  const res = await axios.post(`${apiUrl}/reaction`, data, {
     headers: {
       "Content-Type": "application/json",
     }

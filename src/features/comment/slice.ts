@@ -1,15 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
-const apiUrl: string = 'http://127.0.0.1:8080/api/v1/comment';
+import {apiUrl} from "../../config/api/url";
 
 export const fetchAsyncGet = createAsyncThunk("comments/get", async () => {
-  const res = await axios.get(apiUrl, {
+  const res = await axios.get(`${apiUrl}/comment`, {
     headers: {
       "Content-Type": "application/json",
     }
   });
-  console.log(res);
   return res.data;
 });
 
@@ -26,13 +24,22 @@ export const fetchAsyncCreate = createAsyncThunk("comments/post", async (params:
   return res.data;
 })
 
+const user = {
+  id: 0,
+  name: '',
+  comment: '',
+  rank: 'bronze'
+};
+
 const comments = [
   {
-    id: 0,
-    user_id: 0,
-    body: '',
-    user: {},
-    nominees: []
+    reaction_count: 0,
+    user,
+    comment: {
+      text: '',
+      id: 0
+    },
+    nominees: [user]
   }
 ];
 
