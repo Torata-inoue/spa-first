@@ -11,19 +11,6 @@ export const fetchAsyncGet = createAsyncThunk('reactions/get', async () => {
   return res.data;
 });
 
-export const fetchAsyncCreate = createAsyncThunk('reactions/create', async (params: any) => {
-  const data = {
-    comment_id: params.comment_id,
-    target_id: params.target_id,
-  };
-  const res = await axios.post(`${apiUrl}/reaction`, data, {
-    headers: {
-      "Content-Type": "application/json",
-    }
-  });
-  return res.data;
-});
-
 export const reactionSlice = createSlice({
   name: 'reaction',
   initialState: {
@@ -41,12 +28,6 @@ export const reactionSlice = createSlice({
       return {
         ...state,
         reactions: action.payload
-      };
-    });
-    builder.addCase(fetchAsyncCreate.fulfilled, (state, action) => {
-      return {
-        ...state,
-        reactions: [action.payload, ...state.reactions]
       };
     });
   }

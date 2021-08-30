@@ -1,13 +1,18 @@
-import React, {SyntheticEvent, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {selectUsers, fetchAsyncGet as getUsers} from "../../features/user/slice";
-import {selectComments, fetchAsyncGet as getComments, fetchAsyncCreate as createComment} from "../../features/comment/slice";
-import {selectNominees, fetchAsyncGet as getNominees} from "../../features/nominee/slice";
-import {fetchAsyncCreate as createReaction} from "../../features/reaction/slice";
+import {
+  selectUsers,
+  fetchAsyncGet as getUsers,
+  selectAuthUser,
+  fetchAsyncPutStamina
+} from "../../features/user/slice";
+import {selectComments, fetchAsyncGet as getComments, fetchAsyncCreate as createComment, fetchAsyncCreateReaction} from "../../features/comment/slice";
+import {Link} from "react-router-dom";
 
 const Timeline: React.FC = () => {
   const users = useSelector(selectUsers);
   const comments = useSelector(selectComments);
+  const auth = useSelector(selectAuthUser);
   const dispatch = useDispatch();
 
   const [commentState, setCommentState] = useState('');
@@ -23,7 +28,7 @@ const Timeline: React.FC = () => {
 
   const sendCommentHandler = () => {
     const postComment = async () => {
-      await dispatch(createComment({commentState, nominees: [nomineeState]}));
+      await dispatch(createComment({comment: commentState, nominees: [nomineeState]}));
     }
     postComment();
     setCommentState('');
@@ -34,25 +39,47 @@ const Timeline: React.FC = () => {
     const comment_id = e.currentTarget.dataset.comment_id;
     const target_id = e.currentTarget.dataset.user_id;
     const postReaction = async () => {
-      await dispatch(createReaction({comment_id, target_id}))
+      await dispatch(fetchAsyncCreateReaction({comment_id, target_id}))
     };
     postReaction();
   }
 
-  const sendStaminaHandler = () => {
-
+  const recoverStaminaHandler = () => {
+    const recoverStamina = async () => {
+      await dispatch(fetchAsyncPutStamina({id: auth.id}))
+    }
+    recoverStamina();
   }
 
   return (
     <>
     <div className="container">
 
-      {/*ログインユーザー詳細エリア*/}
+      {/*links*/}
+      <div className="row mb-5">
+        <div className="card col-12">
+          <div className="card-body">
+            <Link to="/prize">景品交換ページへ</Link>
+          </div>
+        </div>
+      </div>
 
+
+      {/*ログインユーザー詳細エリア*/}
+      <div className="row mb-5">
+        <div className="card col-12">
+          <div className="card-body">
+            <p>名前: {auth.name}</p>
+            <p>ポイント: {auth.point}</p>
+            <p>ランク: {auth.rank}</p>
+            <p>スタミナ: {auth.stamina} {auth.stamina <= 5 ? <a href="#" onClick={recoverStaminaHandler}>スタミナ回復する</a> : ''}</p>
+          </div>
+        </div>
+      </div>
 
       {/*フォームエリア*/}
       <div className="row mb-5">
-        <div className="card">
+        <div className="card col-12">
           <div className="card-body">
             <select className="custom-select mb-3" value={nomineeState} onChange={e => setNomineeState(parseInt(e.target.value))}>
               <option selected>ユーザーを選択してください</option>
@@ -81,7 +108,7 @@ const Timeline: React.FC = () => {
           comments.map((comment: any, comment_index: number) =>
             (
               <div key={comment_index} className="row mb-5">
-                <div className="card">
+                <div className="card col-12">
                   <div className="card-header">
                     {comment.user.name}
                     <a href="#javascript" onClick={sendReactionHandler} data-comment_id={comment.comment.id} data-user_id={comment.user.id} className="ml-2">❤</a>

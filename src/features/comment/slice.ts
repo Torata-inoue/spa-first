@@ -11,18 +11,23 @@ export const fetchAsyncGet = createAsyncThunk("comments/get", async () => {
   return res.data;
 });
 
-export const fetchAsyncCreate = createAsyncThunk("comments/post", async (params: any) => {
-  const data = {
-    comment: params.comment,
-    nominees: params.nominees
-  }
-  const res = await axios.post(apiUrl, data, {
+export const fetchAsyncCreate = createAsyncThunk("comments/post", async (data: any) => {
+  const res = await axios.post(`${apiUrl}/comment`, data, {
     headers: {
       "Content-Type": "application/json",
     }
   })
   return res.data;
-})
+});
+
+export const fetchAsyncCreateReaction = createAsyncThunk('reactions/create', async (data: any) => {
+  await axios.post(`${apiUrl}/reaction`, data, {
+    headers: {
+      "Content-Type": "application/json",
+    }
+  });
+  return data;
+});
 
 const user = {
   id: 0,
@@ -61,6 +66,17 @@ export const commentSlice = createSlice({
         ...state,
         comments: [action.payload, ...state.comments]
       };
+    });
+    builder.addCase(fetchAsyncCreateReaction.fulfilled, (state, action) => {
+      return {
+        ...state,
+        comments: [...state.comments].map((comment: any) => {
+          if (comment.comment.id === action.payload.comment_id) {
+            comment.reaction_count++;
+          }
+          return comment;
+        })
+      }
     });
   }
 })
