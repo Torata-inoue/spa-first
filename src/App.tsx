@@ -15,7 +15,7 @@ const App: React.FC = () => {
   }, [dispatch]);
   return (
     <BrowserRouter>
-      <Route exact path="/" component={Timeline} />
+      <Route exact path={"/:page?"} component={Timeline} />
       <Route exact path="/prize" component={Prize} />
     </BrowserRouter>
   )

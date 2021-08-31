@@ -42,7 +42,8 @@ export const usersSlice = createSlice({
       id: 0,
       name: '',
       rank: '',
-      point: 0
+      point: 0,
+      stamina: 0
     },
     selectedUser: {
       id: 0,
@@ -50,7 +51,11 @@ export const usersSlice = createSlice({
       rank: ''
     }
   },
-  reducers: {},
+  reducers: {
+    decreaseStamina(state, action) {
+      state.authUser.stamina--;
+    }
+  },
   extraReducers: builder => {
     builder.addCase(fetchAsyncGet.fulfilled, (state, action) => {
       return {
@@ -72,6 +77,8 @@ export const usersSlice = createSlice({
     });
   }
 });
+
+export const {decreaseStamina} = usersSlice.actions;
 
 export const selectUsers = (state: any) => {
   return state.user.users;

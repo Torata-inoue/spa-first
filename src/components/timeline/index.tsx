@@ -4,10 +4,10 @@ import {
   selectUsers,
   fetchAsyncGet as getUsers,
   selectAuthUser,
-  fetchAsyncPutStamina
+  fetchAsyncPutStamina, decreaseStamina
 } from "../../features/user/slice";
 import {selectComments, fetchAsyncGet as getComments, fetchAsyncCreate as createComment, fetchAsyncCreateReaction} from "../../features/comment/slice";
-import {Link} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 
 const Timeline: React.FC = () => {
   const users = useSelector(selectUsers);
@@ -17,11 +17,16 @@ const Timeline: React.FC = () => {
 
   const [commentState, setCommentState] = useState('');
   const [nomineeState, setNomineeState] = useState(0);
+  // const [pageState, setPageState] = useState(1);
+  //
+  // let {page} = useParams<{page?: string|undefined}>();
+  // setPageState(typeof page === 'undefined' ? 1 : Number(page));
+  // console.log(pageState);
 
   useEffect(() => {
     const fetchInitState = async () => {
       await dispatch(getUsers());
-      await dispatch(getComments());
+      await dispatch(getComments(1));
     };
     fetchInitState();
   }, [dispatch]);
@@ -40,6 +45,7 @@ const Timeline: React.FC = () => {
     const target_id = e.currentTarget.dataset.user_id;
     const postReaction = async () => {
       await dispatch(fetchAsyncCreateReaction({comment_id, target_id}))
+      dispatch(decreaseStamina(auth));
     };
     postReaction();
   }
@@ -59,7 +65,11 @@ const Timeline: React.FC = () => {
       <div className="row mb-5">
         <div className="card col-12">
           <div className="card-body">
-            <Link to="/prize">景品交換ページへ</Link>
+            <ul>
+              <li><Link to="/prize">景品交換ページへ</Link></li>
+              <li><Link to="/profile">プロフィール設定へ</Link></li>
+              <li><Link to="/mypage">マイページへ</Link></li>
+            </ul>
           </div>
         </div>
       </div>
@@ -139,6 +149,12 @@ const Timeline: React.FC = () => {
             )
           )
         }
+      </div>
+
+      {/*ページネーション*/}
+      <div className="mx-auto">
+        {/*<Link to={`/${page - 1}`}>前へ</Link>*/}
+        {/*<Link to={`/${page + 1}`}>次へ</Link>*/}
       </div>
 
     </div>

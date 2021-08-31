@@ -2,8 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import {apiUrl} from "../../config/api/url";
 
-export const fetchAsyncGet = createAsyncThunk("comments/get", async () => {
-  const res = await axios.get(`${apiUrl}/comment`, {
+export const fetchAsyncGet = createAsyncThunk("comments/get", async (page: number) => {
+  const res = await axios.get(`${apiUrl}/comment/${page}`, {
     headers: {
       "Content-Type": "application/json",
     }
@@ -21,12 +21,12 @@ export const fetchAsyncCreate = createAsyncThunk("comments/post", async (data: a
 });
 
 export const fetchAsyncCreateReaction = createAsyncThunk('reactions/create', async (data: any) => {
-  await axios.post(`${apiUrl}/reaction`, data, {
+  const res = await axios.post(`${apiUrl}/reaction`, data, {
     headers: {
       "Content-Type": "application/json",
     }
   });
-  return data;
+  return res.data;
 });
 
 const user = {
@@ -70,13 +70,10 @@ export const commentSlice = createSlice({
     builder.addCase(fetchAsyncCreateReaction.fulfilled, (state, action) => {
       return {
         ...state,
-        comments: [...state.comments].map((comment: any) => {
-          if (comment.comment.id === action.payload.comment_id) {
-            comment.reaction_count++;
-          }
-          return comment;
+        comments: state.comments.map((comment: any) => {
+          return comment.id === action.payload.id ? action.payload : comment;
         })
-      }
+      };
     });
   }
 })
