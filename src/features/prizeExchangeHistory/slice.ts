@@ -1,10 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
-
-const apiUrl: string = 'http://localhost:3001/prizeExchangeHistories';
+import {apiUrl} from "../../config/api/url";
 
 export const fetchAsyncGet = createAsyncThunk('prizeExchangeHistories/get', async () => {
-  const res = await axios.get(apiUrl, {
+  const res = await axios.get(`${apiUrl}/prizeExchangeHistory`, {
     headers: {
       "Content-Type": "application/json",
     }
@@ -12,12 +11,8 @@ export const fetchAsyncGet = createAsyncThunk('prizeExchangeHistories/get', asyn
   return res.data;
 });
 
-export const fetchAsyncCreate = createAsyncThunk('prizeExchangeHistories/create', async (params: any) => {
-  const data = {
-    user_id: params.user_id,
-    prize_id: params.prize_id,
-  };
-  const res = await axios.post(apiUrl, data, {
+export const fetchAsyncCreate = createAsyncThunk('prizeExchangeHistories/create', async (prize_id: number) => {
+  const res = await axios.post(`${apiUrl}/prizeExchangeHistory`, {prize_id}, {
     headers: {
       "Content-Type": "application/json",
     }

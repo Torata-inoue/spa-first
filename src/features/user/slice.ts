@@ -29,6 +29,15 @@ export const fetchAsyncPutStamina = createAsyncThunk('auth/stamina', async (data
   return res.data;
 });
 
+export const fetchAsyncEditAuth = createAsyncThunk('auth/edit', async (data:any) => {
+  const res = await axios.put(`${apiUrl}/user/auth`, data, {
+    headers: {
+      "Content-Type": "application/json",
+    }
+  });
+  return res.data;
+});
+
 export const usersSlice = createSlice({
   name: 'user',
   initialState: {
@@ -54,6 +63,9 @@ export const usersSlice = createSlice({
   reducers: {
     decreaseStamina(state, action) {
       state.authUser.stamina--;
+    },
+    editAuth(state, action) {
+      console.log(action.payload);
     }
   },
   extraReducers: builder => {
@@ -78,7 +90,7 @@ export const usersSlice = createSlice({
   }
 });
 
-export const {decreaseStamina} = usersSlice.actions;
+export const {decreaseStamina, editAuth} = usersSlice.actions;
 
 export const selectUsers = (state: any) => {
   return state.user.users;

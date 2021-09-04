@@ -1,10 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
-
-const apiUrl: string = 'http://localhost:3001/pointHistories';
+import {apiUrl} from "../../config/api/url";
 
 export const fetchAsyncGet = createAsyncThunk('pointHistories/get', async () => {
-  const res = await axios.get(apiUrl, {
+  const res = await axios.get(`${apiUrl}/pointHistory`, {
     headers: {
       "Content-Type": "application/json",
     }

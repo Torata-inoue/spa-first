@@ -11,16 +11,19 @@ export const fetchAsyncGet = createAsyncThunk('reactions/get', async () => {
   return res.data;
 });
 
+const init = {
+  created_at: '',
+  target: {name: ''},
+  comment: ''
+};
+
 export const reactionSlice = createSlice({
   name: 'reaction',
   initialState: {
-    reactions: [
-      {
-        id: 0,
-        user_id: 0,
-        target_id: 0
-      }
-    ]
+    reactions: {
+      receive: [init],
+      send: [init]
+    }
   },
   reducers: {},
   extraReducers: builder => {
@@ -33,7 +36,7 @@ export const reactionSlice = createSlice({
   }
 });
 
-const selectReactions = (state: any) => {
+export const selectReactions = (state: any) => {
   return state.reaction.reactions;
 };
 

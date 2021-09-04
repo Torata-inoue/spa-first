@@ -8,6 +8,7 @@ import {
 } from "../../features/user/slice";
 import {selectComments, fetchAsyncGet as getComments, fetchAsyncCreate as createComment, fetchAsyncCreateReaction} from "../../features/comment/slice";
 import {Link, useParams} from "react-router-dom";
+import Menu from "../parts/menu";
 
 const Timeline: React.FC = () => {
   const users = useSelector(selectUsers);
@@ -61,18 +62,7 @@ const Timeline: React.FC = () => {
     <>
     <div className="container">
 
-      {/*links*/}
-      <div className="row mb-5">
-        <div className="card col-12">
-          <div className="card-body">
-            <ul>
-              <li><Link to="/prize">景品交換ページへ</Link></li>
-              <li><Link to="/profile">プロフィール設定へ</Link></li>
-              <li><Link to="/mypage">マイページへ</Link></li>
-            </ul>
-          </div>
-        </div>
-      </div>
+      <Menu></Menu>
 
 
       {/*ログインユーザー詳細エリア*/}

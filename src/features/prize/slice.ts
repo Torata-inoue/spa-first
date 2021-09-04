@@ -1,10 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from 'axios';
-
-const apiUrl: string = 'http://localhost:3001/prizes';
+import {apiUrl} from "../../config/api/url";
 
 export const fetchAsyncGet = createAsyncThunk('prizes/get', async () => {
-  const res = await axios.get(apiUrl, {
+  const res = await axios.get(`${apiUrl}/prize`, {
     headers: {
       "Content-Type": "application/json",
     }
