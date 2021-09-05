@@ -5,6 +5,7 @@ import {selectAuthUser, updatePoints} from "../../features/user/slice";
 import {selectPrizes, fetchAsyncGet as getPries} from "../../features/prize/slice";
 import {fetchAsyncCreate as postExchangePrize} from "../../features/prizeExchangeHistory/slice";
 import Menu from "../parts/menu";
+import Auth from "../parts/user/Auth";
 
 const Prize: React.FC = () => {
   const auth = useSelector(selectAuthUser);
@@ -32,18 +33,9 @@ const Prize: React.FC = () => {
   return (
     <>
       <div className={"container"}>
-        <Menu></Menu>
+        <Menu />
 
-        {/*Auth User*/}
-        <div className="row mb-5">
-          <div className={"card col-12"}>
-            <div className={"card-body"}>
-              <p>名前: {auth.name}</p>
-              <p>ポイント: {auth.point}</p>
-              <p>ランク: {auth.rank}</p>
-            </div>
-          </div>
-        </div>
+        <Auth />
 
         {/*Prize*/}
         <div className={"card mb-5"}>

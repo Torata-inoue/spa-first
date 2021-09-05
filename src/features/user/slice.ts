@@ -52,7 +52,9 @@ export const usersSlice = createSlice({
       name: '',
       rank: '',
       point: 0,
-      stamina: 0
+      stamina: 0,
+      comment: '',
+      icon_path: ''
     },
     selectedUser: {
       id: 0,
@@ -82,6 +84,12 @@ export const usersSlice = createSlice({
       }
     });
     builder.addCase(fetchAsyncPutStamina.fulfilled, (state, action) => {
+      return {
+        ...state,
+        authUser: action.payload
+      }
+    });
+    builder.addCase(fetchAsyncEditAuth.fulfilled, (state, action) => {
       return {
         ...state,
         authUser: action.payload

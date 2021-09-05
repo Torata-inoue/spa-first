@@ -1,13 +1,12 @@
 import React, {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {selectAuthUser} from "../../features/user/slice";
 import {Link} from "react-router-dom";
 import {selectPrizeExchangeHistories} from "../../features/prizeExchangeHistory/slice";
 import {fetchAsyncGet} from "../../features/prizeExchangeHistory/slice";
 import Menu from "../parts/menu";
+import Auth from "../parts/user/Auth";
 
 const PrizeExchangeHistory: React.FC = () => {
-  const auth = useSelector(selectAuthUser);
   const histories = useSelector(selectPrizeExchangeHistories);
   const dispatch = useDispatch();
 
@@ -20,18 +19,9 @@ const PrizeExchangeHistory: React.FC = () => {
 
   return (
     <div className={"container"}>
-      <Menu></Menu>
+      <Menu />
 
-      {/*Auth User*/}
-      <div className="row mb-5">
-        <div className={"card col-12"}>
-          <div className={"card-body"}>
-            <p>名前: {auth.name}</p>
-            <p>ポイント: {auth.point}</p>
-            <p>ランク: {auth.rank}</p>
-          </div>
-        </div>
-      </div>
+      <Auth />
 
       {/*History*/}
       <div className={"card mb-5"}>

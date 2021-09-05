@@ -1,12 +1,11 @@
 import React, {useEffect} from "react";
 import Menu from "../parts/menu";
 import {useDispatch, useSelector} from "react-redux";
-import {selectAuthUser} from "../../features/user/slice";
 import {fetchAsyncGet, selectReactions} from "../../features/reaction/slice";
 import {Link, useParams} from "react-router-dom";
+import Auth from "../parts/user/Auth";
 
 const Mypage: React.FC = () => {
-  const auth = useSelector(selectAuthUser);
   const reactions = useSelector(selectReactions);
   const dispatch = useDispatch();
 
@@ -22,18 +21,9 @@ const Mypage: React.FC = () => {
 
   return (
     <div className={"container"}>
-      <Menu></Menu>
+      <Menu />
 
-      {/*Auth User*/}
-      <div className="row mb-5">
-        <div className={"card col-12"}>
-          <div className={"card-body"}>
-            <p>名前: {auth.name}</p>
-            <p>ポイント: {auth.point}</p>
-            <p>ランク: {auth.rank}</p>
-          </div>
-        </div>
-      </div>
+      <Auth />
 
       <div className={"card"}>
         <div className={"card-header"}>

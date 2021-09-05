@@ -1,12 +1,11 @@
 import React, {useEffect} from "react";
 import {Link} from "react-router-dom";
-import {selectAuthUser} from "../../features/user/slice";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchAsyncGet, selectPointHistories} from "../../features/pointHistory/slice";
 import Menu from "../parts/menu";
+import Auth from "../parts/user/Auth";
 
 const PointHistory: React.FC = () => {
-  const auth = useSelector(selectAuthUser);
   const histories = useSelector(selectPointHistories);
   const dispatch = useDispatch();
 
@@ -19,18 +18,9 @@ const PointHistory: React.FC = () => {
 
   return (
     <div className={"container"}>
-      <Menu></Menu>
+      <Menu />
 
-      {/*Auth User*/}
-      <div className="row mb-5">
-        <div className={"card col-12"}>
-          <div className={"card-body"}>
-            <p>名前: {auth.name}</p>
-            <p>ポイント: {auth.point}</p>
-            <p>ランク: {auth.rank}</p>
-          </div>
-        </div>
-      </div>
+      <Auth />
 
       {/*History*/}
       <div className={"card mb-5"}>

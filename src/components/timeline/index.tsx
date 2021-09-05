@@ -10,6 +10,7 @@ import {selectComments, fetchAsyncGet as getComments, fetchAsyncCreate as create
 import {Link, useParams} from "react-router-dom";
 import Menu from "../parts/menu";
 import Card from "./card";
+import Auth from "../parts/user/Auth";
 
 const Timeline: React.FC = () => {
   const users = useSelector(selectUsers);
@@ -32,13 +33,6 @@ const Timeline: React.FC = () => {
     setNomineeState(0)
   }
 
-  const recoverStaminaHandler = () => {
-    const recoverStamina = async () => {
-      await dispatch(fetchAsyncPutStamina({id: auth.id}))
-    }
-    recoverStamina();
-  }
-
   const getCommentsHandler = async () => await dispatch(getComments(page));
 
   useEffect(() => {
@@ -59,20 +53,9 @@ const Timeline: React.FC = () => {
     <>
     <div className="container">
 
-      <Menu></Menu>
+      <Menu />
 
-
-      {/*ログインユーザー詳細エリア*/}
-      <div className="row mb-5">
-        <div className="card col-12">
-          <div className="card-body">
-            <p>名前: {auth.name}</p>
-            <p>ポイント: {auth.point}</p>
-            <p>ランク: {auth.rank}</p>
-            <p>スタミナ: {auth.stamina} {auth.stamina <= 5 ? <a onClick={recoverStaminaHandler}>スタミナ回復する</a> : ''}</p>
-          </div>
-        </div>
-      </div>
+      <Auth />
 
       {/*フォームエリア*/}
       <div className="row mb-5">

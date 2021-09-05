@@ -2,10 +2,12 @@ import React, {useEffect, useState} from "react";
 import Menu from "../parts/menu";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchAsyncEditAuth, selectAuthUser} from "../../features/user/slice";
+import Uploader, {uploadImage} from "../parts/image/Uploader";
 
 const Profile: React.FC = () => {
   const auth = useSelector(selectAuthUser);
   const [authState, setAuthState] = useState(auth);
+  const [files, setFiles] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -19,14 +21,21 @@ const Profile: React.FC = () => {
 
   const handleClick = () => {
     const editUser = async () => {
-      await dispatch(fetchAsyncEditAuth({name: authState.name, comment: authState.comment}))
+      let data: {name: string, comment: string, icon_path?: string} = {
+        name: authState.name,
+        comment: authState.comment
+      };
+      if (files.length !== 0) {
+        data.icon_path = await uploadImage(files);
+      }
+      await dispatch(fetchAsyncEditAuth(data))
     }
     editUser();
   }
 
   return (
     <div className={"container"}>
-      <Menu></Menu>
+      <Menu />
       <div className={"card"}>
         <div className={"card-body"}>
           名前: <input
@@ -43,6 +52,7 @@ const Profile: React.FC = () => {
                       value={authState.comment}
                       onInput={handleInput}
                     />
+          <Uploader multiple={false} files={files} setFiles={setFiles} defaultImage={auth.icon_path} />
         </div>
         <div className={"card-footer"}>
           <button className={"btn btn-primary"} onClick={handleClick}>送信する</button>
