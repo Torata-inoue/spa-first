@@ -4,11 +4,12 @@ import {
   selectUsers,
   fetchAsyncGet as getUsers,
   selectAuthUser,
-  fetchAsyncPutStamina, decreaseStamina
+  fetchAsyncPutStamina
 } from "../../features/user/slice";
 import {selectComments, fetchAsyncGet as getComments, fetchAsyncCreate as createComment, fetchAsyncCreateReaction} from "../../features/comment/slice";
 import {Link, useParams} from "react-router-dom";
 import Menu from "../parts/menu";
+import Card from "./card";
 
 const Timeline: React.FC = () => {
   const users = useSelector(selectUsers);
@@ -18,19 +19,9 @@ const Timeline: React.FC = () => {
 
   const [commentState, setCommentState] = useState('');
   const [nomineeState, setNomineeState] = useState(0);
-  // const [pageState, setPageState] = useState(1);
-  //
-  // let {page} = useParams<{page?: string|undefined}>();
-  // setPageState(typeof page === 'undefined' ? 1 : Number(page));
-  // console.log(pageState);
 
-  useEffect(() => {
-    const fetchInitState = async () => {
-      await dispatch(getUsers());
-      await dispatch(getComments(1));
-    };
-    fetchInitState();
-  }, [dispatch]);
+  const params = useParams<{page?: string|undefined}>();
+  let page = typeof params.page === 'undefined' ? 1 : Number(params.page);
 
   const sendCommentHandler = () => {
     const postComment = async () => {
@@ -41,22 +32,28 @@ const Timeline: React.FC = () => {
     setNomineeState(0)
   }
 
-  const sendReactionHandler = (e: any) => {
-    const comment_id = e.currentTarget.dataset.comment_id;
-    const target_id = e.currentTarget.dataset.user_id;
-    const postReaction = async () => {
-      await dispatch(fetchAsyncCreateReaction({comment_id, target_id}))
-      dispatch(decreaseStamina(auth));
-    };
-    postReaction();
-  }
-
   const recoverStaminaHandler = () => {
     const recoverStamina = async () => {
       await dispatch(fetchAsyncPutStamina({id: auth.id}))
     }
     recoverStamina();
   }
+
+  const getCommentsHandler = async () => await dispatch(getComments(page));
+
+  useEffect(() => {
+    const fetchInitState = async () => {
+      await dispatch(getUsers());
+    };
+    fetchInitState();
+    getCommentsHandler();
+  }, [dispatch]);
+
+  useEffect(() => {
+    getCommentsHandler();
+    window.scrollTo(0, 0);
+  }, [page])
+
 
   return (
     <>
@@ -72,7 +69,7 @@ const Timeline: React.FC = () => {
             <p>名前: {auth.name}</p>
             <p>ポイント: {auth.point}</p>
             <p>ランク: {auth.rank}</p>
-            <p>スタミナ: {auth.stamina} {auth.stamina <= 5 ? <a href="#" onClick={recoverStaminaHandler}>スタミナ回復する</a> : ''}</p>
+            <p>スタミナ: {auth.stamina} {auth.stamina <= 5 ? <a onClick={recoverStaminaHandler}>スタミナ回復する</a> : ''}</p>
           </div>
         </div>
       </div>
@@ -105,46 +102,16 @@ const Timeline: React.FC = () => {
       {/*TimelineArea*/}
       <div className="mb-5">
         {
-          comments.map((comment: any, comment_index: number) =>
-            (
-              <div key={comment_index} className="row mb-5">
-                <div className="card col-12">
-                  <div className="card-header">
-                    {comment.user.name}
-                    <a href="#javascript" onClick={sendReactionHandler} data-comment_id={comment.comment.id} data-user_id={comment.user.id} className="ml-2">❤</a>
-                  </div>
-                  <div className="card-body">
-                    コメント: {comment.comment.text}<br />
-                    いいね数: {comment.reaction_count}
-                  </div>
-                  <div className="card-footer">
-                    <div className="row">
-                      {
-                        comment.nominees.map((nominee: any, index: number) =>
-                          (
-                            <div key={`${comment_index}-${index}`} className="mr-3">
-                              {nominee.name}
-                              <a href="#javascript" onClick={sendReactionHandler} data-comment_id={comment.comment.id} data-user_id={nominee.id} className="ml-2">❤</a>
-                            </div>
-                          )
-                        )
-                      }
-                    </div>
-                    <div className="row">
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )
+          comments.map(
+            (comment: any, comment_index: number) => <Card comment={comment} key={comment_index}></Card>
           )
         }
       </div>
 
       {/*ページネーション*/}
       <div className="mx-auto">
-        {/*<Link to={`/${page - 1}`}>前へ</Link>*/}
-        {/*<Link to={`/${page + 1}`}>次へ</Link>*/}
+        <Link to={`/timeline/${page - 1}`}>前へ</Link>
+        <Link to={`/timeline/${page + 1}`}>次へ</Link>
       </div>
 
     </div>

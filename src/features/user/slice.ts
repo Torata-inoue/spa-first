@@ -64,8 +64,8 @@ export const usersSlice = createSlice({
     decreaseStamina(state, action) {
       state.authUser.stamina--;
     },
-    editAuth(state, action) {
-      console.log(action.payload);
+    updatePoints(state, action) {
+      state.authUser.point = action.payload.point;
     }
   },
   extraReducers: builder => {
@@ -90,7 +90,7 @@ export const usersSlice = createSlice({
   }
 });
 
-export const {decreaseStamina, editAuth} = usersSlice.actions;
+export const {decreaseStamina, updatePoints} = usersSlice.actions;
 
 export const selectUsers = (state: any) => {
   return state.user.users;

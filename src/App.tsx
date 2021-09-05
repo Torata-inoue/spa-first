@@ -21,13 +21,12 @@ const App: React.FC = () => {
 
   return (
     <BrowserRouter>
-      <Route exact path={"/"} component={Timeline} />
       <Route exact path={"/prize"} component={Prize} />
       <Route exact path={"/pointHistory"} component={PointHistory} />
       <Route exact path={"/prizeExchangeHistory"} component={PrizeExchangeHistory} />
-      <Route exact path={"/mypage/receive"} component={Mypage} />
-      <Route exact path={"/mypage/send"} component={Mypage} />
+      <Route exact path={"/mypage/:action/:user_id?"} component={Mypage} />
       <Route exact path={"/profile"} component={Profile} />
+      <Route exact path={"/timeline/:page?"} component={Timeline} />
     </BrowserRouter>
   )
 }

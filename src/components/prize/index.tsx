@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {selectAuthUser} from "../../features/user/slice";
+import {selectAuthUser, updatePoints} from "../../features/user/slice";
 import {selectPrizes, fetchAsyncGet as getPries} from "../../features/prize/slice";
 import {fetchAsyncCreate as postExchangePrize} from "../../features/prizeExchangeHistory/slice";
 import Menu from "../parts/menu";
@@ -10,6 +10,7 @@ const Prize: React.FC = () => {
   const auth = useSelector(selectAuthUser);
   const prizes = useSelector(selectPrizes);
   const dispatch = useDispatch();
+
 
   useEffect(() => {
     const fetchInitState = async () => {
@@ -20,8 +21,10 @@ const Prize: React.FC = () => {
 
   const sendPrizeHandler = (e: any) => {
     const prize_id = e.currentTarget.dataset.prize_id;
+    const prize = prizes.find((prize: any) => prize.id == prize_id);
     const postExchange = async () => {
       await dispatch(postExchangePrize(prize_id));
+      dispatch(updatePoints({point: auth.point - prize.exchange_point}));
     }
     postExchange();
   }
