@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 
-const Menu: React.FC = () => {
+const Menu = (): JSX.Element => {
   return (
     <div className="row mb-5">
       <div className="card col-12">

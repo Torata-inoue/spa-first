@@ -2,27 +2,27 @@ import React, {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {
   selectUsers,
-  fetchAsyncGet as getUsers,
-  selectAuthUser,
-  fetchAsyncPutStamina
+  fetchAsyncGet as getUsers
 } from "../../features/user/slice";
-import {selectComments, fetchAsyncGet as getComments, fetchAsyncCreate as createComment, fetchAsyncCreateReaction} from "../../features/comment/slice";
-import {Link, useParams} from "react-router-dom";
+import {selectComments, fetchAsyncGet as getComments, fetchAsyncCreate as createComment} from "../../features/comment/slice";
+import {Link, useParams, useHistory} from "react-router-dom";
 import Menu from "../parts/menu";
 import Card from "./card";
 import Auth from "../parts/user/Auth";
+import {user} from "../../features/user/types";
+import {comment} from "../../features/comment/types";
 
 const Timeline: React.FC = () => {
-  const users = useSelector(selectUsers);
-  const comments = useSelector(selectComments);
-  const auth = useSelector(selectAuthUser);
+  const users: user[] = useSelector(selectUsers);
+  const comments: comment[] = useSelector(selectComments);
+  const history = useHistory();
   const dispatch = useDispatch();
 
-  const [commentState, setCommentState] = useState('');
-  const [nomineeState, setNomineeState] = useState(0);
+  const [commentState, setCommentState] = useState<string>('');
+  const [nomineeState, setNomineeState] = useState<number>(0);
 
   const params = useParams<{page?: string|undefined}>();
-  let page = typeof params.page === 'undefined' ? 1 : Number(params.page);
+  let page: number = typeof params.page === 'undefined' ? 1 : Number(params.page);
 
   const sendCommentHandler = () => {
     const postComment = async () => {
@@ -30,7 +30,8 @@ const Timeline: React.FC = () => {
     }
     postComment();
     setCommentState('');
-    setNomineeState(0)
+    setNomineeState(0);
+    history.push('/timeline/1');
   }
 
   const getCommentsHandler = async () => await dispatch(getComments(page));
@@ -86,7 +87,12 @@ const Timeline: React.FC = () => {
       <div className="mb-5">
         {
           comments.map(
-            (comment: any, comment_index: number) => <Card comment={comment} key={comment_index}></Card>
+            (comment: any, comment_index: number) => {
+              if (comment_index > 4) {
+                return;
+              }
+              return <Card comment={comment} key={comment_index} />
+            }
           )
         }
       </div>

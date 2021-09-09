@@ -1,9 +1,10 @@
 import React from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {fetchAsyncPutStamina, selectAuthUser} from "../../../features/user/slice";
+import {user} from "../../../features/user/types";
 
 const Auth = () => {
-  const auth = useSelector(selectAuthUser);
+  const auth: user = useSelector(selectAuthUser);
   const dispatch = useDispatch();
 
   const recoverStaminaHandler = () => {

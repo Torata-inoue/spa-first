@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import {apiUrl} from "../../config/api/url";
+import {user as userType} from "../user/types";
+import {comment as commentType} from "./types";
 
 export const fetchAsyncGet = createAsyncThunk("comments/get", async (page: number) => {
   const res = await axios.get(`${apiUrl}/comment/${page}`, {
@@ -11,7 +13,7 @@ export const fetchAsyncGet = createAsyncThunk("comments/get", async (page: numbe
   return res.data;
 });
 
-export const fetchAsyncCreate = createAsyncThunk("comments/post", async (data: any) => {
+export const fetchAsyncCreate = createAsyncThunk("comments/post", async (data: {comment: string, nominees: number[]}) => {
   const res = await axios.post(`${apiUrl}/comment`, data, {
     headers: {
       "Content-Type": "application/json",
@@ -20,7 +22,7 @@ export const fetchAsyncCreate = createAsyncThunk("comments/post", async (data: a
   return res.data;
 });
 
-export const fetchAsyncCreateReaction = createAsyncThunk('reactions/create', async (data: any) => {
+export const fetchAsyncCreateReaction = createAsyncThunk('reactions/create', async (data: {comment_id: number, target_id: number}) => {
   const res = await axios.post(`${apiUrl}/reaction`, data, {
     headers: {
       "Content-Type": "application/json",
@@ -29,22 +31,25 @@ export const fetchAsyncCreateReaction = createAsyncThunk('reactions/create', asy
   return res.data;
 });
 
-const user = {
+const user: userType = {
+  comment: '',
+  icon_path: '',
   id: 0,
   name: '',
-  comment: '',
-  rank: 'bronze'
+  point: 0,
+  rank: 'bronze',
+  stamina: 0
 };
 
-const comments = [
+const comments: commentType[] = [
   {
-    reaction_count: 0,
-    user,
     comment: {
-      text: '',
-      id: 0
+      id: 0,
+      text: ''
     },
-    nominees: [user]
+    nominees: [user],
+    user,
+    reaction_count: 0
   }
 ];
 
@@ -71,7 +76,8 @@ export const commentSlice = createSlice({
       return {
         ...state,
         comments: state.comments.map((comment: any) => {
-          return comment.id === action.payload.id ? action.payload : comment;
+          console.log(comment.comment.id);
+          return comment.comment.id === action.payload.comment.id ? action.payload : comment;
         })
       };
     });

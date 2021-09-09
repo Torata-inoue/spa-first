@@ -3,13 +3,13 @@ import {fetchAsyncCreateReaction} from "../../features/comment/slice";
 import {decreaseStamina, selectAuthUser} from "../../features/user/slice";
 import {useDispatch, useSelector} from "react-redux";
 
-const Card: React.FC<{comment: any, key: number}> = ({comment, key}) => {
+const Card = ({comment, key}: {comment: any, key: number}): JSX.Element => {
   const dispatch = useDispatch();
   const auth = useSelector(selectAuthUser);
 
   const sendReactionHandler = (e: any) => {
-    const comment_id = e.currentTarget.dataset.comment_id;
-    const target_id = e.currentTarget.dataset.user_id;
+    const comment_id: number = e.currentTarget.dataset.comment_id;
+    const target_id: number = e.currentTarget.dataset.user_id;
     const postReaction = async () => {
       await dispatch(fetchAsyncCreateReaction({comment_id, target_id}))
       dispatch(decreaseStamina(auth));

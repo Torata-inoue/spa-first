@@ -5,11 +5,11 @@ import {fetchAsyncGet, selectReactions} from "../../features/reaction/slice";
 import {Link, useParams} from "react-router-dom";
 import Auth from "../parts/user/Auth";
 
-const Mypage: React.FC = () => {
+const Mypage = (): JSX.Element => {
   const reactions = useSelector(selectReactions);
   const dispatch = useDispatch();
 
-  const {action, user_id} = useParams<{action: string, user_id: string|undefined}>();
+  const {action, user_id}: {action: string, user_id: string|undefined} = useParams<{action: string, user_id: string|undefined}>();
 
   const getReactions = async () => {
     await dispatch(fetchAsyncGet());
